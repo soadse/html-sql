@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="https://www.freeiconspng.com/uploads/sql-server-icon-png-29.png" type="image/x-icon">
+    <title>MySQL</title>
+    <style>
+        body{
+            background-color: white;
+            background-image: url(https://www.ibm.com/content/dam/adobe-cms/instana/media_logo/Azure-SQL-Database-Monitoring.component.complex-narrative-xl.ts=1692797825154.png/content/adobe-cms/br/pt/products/instana/supported-technologies/azure-sql-database/_jcr_content/root/table_of_contents/body/content_section_styled/content-section-body/complex_narrative/logoimage);
+            background-repeat: no-repeat;
+            background-position: center;
+            background-attachment: fixed;
+            
+        }
+        h2{
+            color: darkblue;
+        }
+        .tema{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: linear-gradient(white, blue, white);
+            color: white;
+            opacity: 0.8;
+        }
+        .tabela{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background-color: blue;
+            color: white;
+            opacity: 0.8;
+        }
+        h3{
+            text-align: center;
+            color: blue;
+        }
+        .container{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        button{
+            border-radius: 10px;
+            background-color: lightblue;
+            border-bottom: 10px;
+            border-color: rgb(82, 82, 204);
+        }
+        a{
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+<div class="tema"><h1>O que é SQL?</h1></div>
+<h2>O que é SQL? O SQL é uma linguagem padrão para manipulação de registros em bancos de dados relacionais. A sigla SQL vem dos termos em inglês “Structured Query Language”, que podem ser traduzidos para o português como “Linguagem de Consulta Estruturada”.</h2>
+    
+<div class="tema"><h1>BASE DE UM BANCO DE DADOS</h1></div>
+<h2>Criando um banco de dados</h2>
+<p>
+    create database teste; <br>
+    ou <br>
+    create database teste <br>
+    default character set utf8mb4 <br>
+    default collate utf8mb4_general_ci;
+</p>
+
+<h2>Abrir o banco de dados</h2>
+<p>use teste;</p>
+
+<h2>Criando uma tabela dentro do banco de dados cadastro</h2>
+<p>
+    create table pessoas (<br>
+    nome varchar(30) not null,<br>
+    nascimento date,<br>
+    sexo enum('M', 'F'),<br>
+    peso decimal(5,2),<br>
+    altura decimal(3,2),<br>
+    nascionalidade varchar(20) default 'Brasil'<br>
+    ) default charset = utf8mb4;
+</p>
+
+<h2>Criando uma tabela se ela ja não exitir no banco de dados</h2>
+<p>
+    create table if not exists cursos (<br>
+    nome varchar(30) not null unique,<br>
+    descriçao text,<br>
+    carga int unsigned,<br>
+    totaulas int unsigned,<br>
+    ano year default '2016'<br>
+    ) default charset = utf8mb4;
+</p>
+
+<h2>Criando uma tabela dentro do banco de dados cadastro usando chave primaria</h2>
+<p>
+    create table pessoas (<br>
+    id int not null auto_increment,<br>
+    nome varchar(30) not null,<br>
+    nascimento date,<br>
+    sexo enum('M', 'F'),<br>
+    peso decimal(5,2),<br>
+    altura decimal(3,2),<br>
+    nascionalidade varchar(20) default 'Brasil',<br>
+    primary key (id)<br>
+    ) default charset = utf8;
+</p>
+
+<h2>Para apagar um banco de dados ou uma tabela</h2>
+<p>
+    drop database teste;<br>
+    drop table pessoas;<br>
+    -- apagar uma tabela se ela existir<br>
+    drop table if exists pessoas;
+</p>
+
+<h2>Mostrar a tabela do banco de dados</h2>
+<p>
+    select * from cursos;<br>
+    select * from pessoas;
+</p>
+
+<h2>Descrever a estrutura de uma tabela</h2>
+<p>
+    describe cursos;<br>
+    ou <br>
+    desc cursos;<br>
+    desc pessoas;
+</p>
+
+
+<h2>Se caso esquecer de colocar o PRIMARY KEY <em style="color: red;">*IMPORTANTE</em></h2>
+<p>
+    alter table cursos <br>
+    add column idcurso int first;<br>
+    
+    alter table cursos <br>
+    add primary key (idcurso);
+</p>
+
+<div class="tema"><h1>INSERINDO DADOS EM UMA TABELA</h1></div>
+<h2>Inserindo dados na tabela com chave primaria</h2>
+<p>
+    insert into pessoas <br>
+    (id, nome, nascimento, sexo, peso, altura, nascionalidade) <br>
+    values <br>
+    (default,'Luis','1996-03-10','M','85','1.75',default);<br>
+    <h3>ou sem a chave primaria</h3>
+    insert into pessoas <br>
+    (id, nome, nascimento, sexo, peso, altura, nascionalidade) <br>
+    values <br>
+    ('num','Eliete','1996-03-10','M','85','1.75','Brasil');<br>
+    <h3>também podendo abreviar o values / inserindo mais de uma linha na caluna</h3>
+
+    <details>
+        <summary>insert into pessoas values</summary>
+        <br>
+        <p>
+            (1,'Daniel Morais','Auxiliar Administrat','1984-01-02','M',78.50,1.83,'Brasil'),<br>
+            (2,'Talita Nascimento','Farmacêutico','1999-12-30','F',55.20,1.65,'Portugal'),<br>
+            (3,'Emerson Gabriel','Programador','1920-12-30','M',50.20,1.65,'Moçambique'),<br>
+            (4,'Lucas Damasceno','Auxiliar Administrat','1930-11-02','M',63.20,1.75,'Irlanda'),<br>
+            (5,'Leila Martins','Farmacêutico','1975-04-22','F',99.00,2.15,'Brasil'),<br>
+            (6,'Letícia Neves','Programador','1999-12-03','F',87.00,2.00,'Brasil'),<br>
+            (7,'Janaína Couto','Auxiliar Administrat','1987-11-12','F',75.40,1.66,'EUA'),<br>
+            (8,'Carlisson Rosa','Professor','2010-08-01','M',78.22,1.98,'Brasil'),<br>
+            (9,'Jackson Telles','Programador','1999-01-23','M',55.75,1.33,'Portugal'),<br>
+            (10,'Danilo Araujo','Dentista','1975-12-10','M',99.21,1.87,'EUA'),<br>
+            (11,'Andreia Delfino','Auxiliar Administrat','1975-07-01','F',48.64,1.54,'Irlanda'),<br>
+            (12,'Valter Vilmerson','Ator','1985-10-12','M',88.55,2.03,'Brasil'),<br>
+            (13,'Allan Silva','Programador','1993-11-11','M',76.99,1.55,'Brasil'),<br>
+            (14,'Rosana Kunz','Professor','1935-01-16','F',55.24,1.87,'Brasil'),<br>
+            (15,'Josiane Dutra','Empreendedor','1950-01-20','F',98.70,1.04,'Portugal'),<br>
+            (16,'Elvis Schwarz','Dentista','2011-05-07','M',66.69,1.76,'EUA'),<br>
+            (17,'Paulo Narley','Auxiliar Administrat','1997-03-17','M',120.10,2.22,'Brasil'),<br>
+            (18,'Joade Assis','Médico','1930-12-01','M',65.88,1.78,'França'),<br>
+            (19,'Nara Matos','Programador','1978-03-17','F',65.90,1.33,'Brasil'),<br>
+            (20,'Marcos Dissotti','Empreendedor','2010-01-01','M',53.79,1.54,'Portugal'),<br>
+            (21,'Ana Carolina Mendes','Ator','2000-12-15','F',88.30,1.54,'Brasil'),<br>
+            (22,'Guilherme de Sousa','Dentista','2001-05-18','M',132.70,1.97,'Moçambique'),<br>
+            (23,'Bruno Torres','Auxiliar Administrat','2000-01-30','M',44.65,1.65,'Brasil'),<br>
+            (24,'Yuji Homa','Empreendedor','1996-12-25','M',33.90,1.22,'Japão'),<br>
+            (25,'Raian Porto','Programador','1989-05-05','M',54.89,1.54,'Brasil'),<br>
+            (26,'Paulo Batista','Ator','1999-03-15','M',110.12,1.87,'Portugal'),<br>
+            (27,'Monique Precivalli','Auxiliar Administrat','2013-12-30','F',48.20,1.22,'Brasil'),<br>
+            (28,'Herisson Silva','Auxiliar Administrat','1965-10-10','M',74.65,1.56,'EUA'),<br>
+            (29,'Tiago Ulisses','Dentista','1993-04-22','M',150.30,2.35,'Brasil'),<br>
+            (30,'Anderson Rafael','Programador','1989-12-01','M',64.22,1.44,'Irlanda'),<br>
+            (31,'Karine Ribeiro','Empreendedor','1988-10-01','F',42.10,1.65,'Brasil'),<br>
+            (32,'Roberto Luiz Debarba','Ator','2007-01-09','M',77.44,1.56,'Brasil'),<br>
+            (33,'Jarismar Andrade','Dentista','2000-06-23','F',63.70,1.33,'Brasil'),<br>
+            (34,'Janaina Oliveira','Professor','1955-03-12','F',52.90,1.76,'Canadá'),<br>
+            (35,'Márcio Mello','Programador','2011-11-20','M',54.11,1.55,'EUA'),<br>
+            (36,'Robson Rodolpho','Auxiliar Administrat','2000-08-08','M',110.10,1.76,'Brasil'),<br>
+            (37,'Daniele Moledo','Empreendedor','2006-08-11','F',101.30,1.99,'Brasil'),<br>
+            (38,'Neto Sophiate','Ator','1996-05-17','M',59.28,1.65,'Portugal'),<br>
+            (39,'Neriton Dias','Auxiliar Administrat','2009-10-30','M',48.99,1.29,'Brasil'),<br>
+            (40,'André Schmidt','Programador','1993-07-26','M',55.37,1.22,'Angola'),<br>
+            (41,'Isaias Buscarino','Dentista','2001-01-07','M',99.90,1.55,'Moçambique'),<br>
+            (42,'Rafael Guimma','Empreendedor','1968-04-11','M',88.88,1.54,'Brasil'),<br>
+            (43,'Ana Carolina Hernandes','Ator','1970-10-11','F',65.40,2.08,'EUA'),<br>
+            (44,'Luiz Paulo','Professor','1984-11-01','M',75.12,1.38,'Portugal'),<br>
+            (45,'Bruna Teles','Programador','1980-11-07','F',55.10,1.86,'Brasil'),<br>
+            (46,'Diogo Padilha','Auxiliar Administrat','2000-03-03','M',54.34,1.88,'Angola'),<br>
+            (47,'Bruno Miltersteiner','Dentista','1986-02-19','M',77.45,1.65,'Alemanha'),<br>
+            (48,'Elaine Nunes','Programador','1998-08-15','F',35.90,2.00,'Canadá'),<br>
+            (49,'Silvio Ricardo','Programador','2012-03-12','M',65.99,1.23,'EUA'),<br>
+            (50,'Denilson Barbosa da Silva','Empreendedor','2000-01-08','M',97.30,2.00,'Brasil'),<br>
+            (51,'Jucinei Teixeira','Professor','1977-11-22','F',44.80,1.76,'Portugal'),<br>
+            (52,'Bruna Santos','Auxiliar Administrat','1991-12-01','F',76.30,1.45,'Canadá'),<br>
+            (53,'André Vitebo','Médico','1970-07-01','M',44.11,1.55,'Brasil'),<br>
+            (54,'Andre Santini','Programador','1991-08-15','M',66.00,1.76,'Itália'),<br>
+            (55,'Ruan Valente','Programador','1998-03-19','M',101.90,1.76,'Canadá'),<br>
+            (56,'Nailton Mauricio','Médico','1992-04-25','M',86.01,1.43,'EUA'),<br>
+            (57,'Rita Pontes','Professor','1999-09-02','F',54.10,1.35,'Angola'),<br>
+            (58,'Carlos Camargo','Programador','2005-02-22','M',124.65,1.33,'Brasil'),<br>
+            (59,'Philppe Oliveira','Auxiliar Administrat','2000-05-23','M',105.10,2.19,'Brasil'),<br>
+            (60,'Dayana Dias','Professor','1993-05-30','F',88.30,1.66,'Angola'),<br>
+            (61,'Silvana Albuquerque','Programador','1999-05-22','F',56.00,1.50,'Brasil');<br>
+        </p>
+    </details>
+</p>
+
+<div class="tema"><h1>ALTERAR A ESTRUTURA DE UMA TABELA</h1></div>
+<h2>Acrescentando uma coluna na ultima posicao</h2>
+<p>
+    alter table pessoas <br>
+    add column profissao varchar(10);
+</p>
+
+<h2>Escolhendo a posição</h2>
+<p>
+    alter table pessoas <br>
+    add column profissao varchar(10) after nome;
+</p>
+
+<h2>Colocando na primeira posição</h2>
+<p>
+    alter table pessoas <br>
+    add column codigo int first;
+</p>
+
+<h2>Modificando definições / mudar tipo primitivo e as constraints</h2>
+<p>
+    alter table pessoas <br>
+    modify column profissao varchar(20) not null default '';
+</p>
+
+<h2>Alterado o nome da coluna / mudar tipo primitivo, constraints e o nome da tabela</h2>
+<p>
+    alter table pessoas <br>
+    change column profissao prof varchar(20) not null default '';
+</p>
+
+<h2>Alterando o nome de uma tabela</h2>
+<p>
+    alter table curso <br>
+    rename to cursos;
+</p>
+
+<h2>Apagando uma coluna</h2>
+<p>
+    alter table pessoas <br>
+    drop column codigo;
+</p>
+
+<div class="tema"><h1>MANIPULANDO LINHAS</h1></div>
+<p>
+<details>
+    <summary>insert into curso values</summary>
+    <br>
+    <p>
+        ('1','HTML5','Curso de HTML5',40,37,2014),<br>
+        ('2','Algoritmos','Lógica de Programação',20,15,2014),<br>
+        ('3','Photoshop5','Dicas de Photoshop CC',10,8,2014),<br>
+        ('4','PHP','Curso de PHP para iniciantes',40,20,2015),<br>
+        ('5','Java','Introdução à Linguagem Java',40,29,2015),<br>
+        ('6','MySQL','Bancos de Dados MySQL',30,15,2016),<br>
+        ('7','Word','Curso completo de Word',40,30,2016),<br>
+        ('8','Python','Curso de Python',40,18,2017),<br>
+        ('9','POO','Curso de Programação Orientada a Objetos',60,35,2016),<br>
+        ('10','Excel','Curso completo de Excel',40,30,2017),<br>
+        ('11','Responsividade','Curso de Responsividade',30,15,2018),<br>
+        ('12','C++','Curso de C++ com Orientação a Objetos',40,25,2017),<br>
+        ('13','C#','Curso de C#',30,12,2017),<br>
+        ('14','Android','Curso de Desenvolvimento de Aplicativos para Android',60,30,2018),<br>
+        ('15','JavaScript','Curso de JavaScript',35,18,2017),<br>
+        ('16','PowerPoint','Curso completo de PowerPoint',30,12,2018),<br>
+        ('17','Swift','Curso de Desenvolvimento de Aplicativos para iOS',60,30,2019),<br>
+        ('18','Hardware','Curso de Montagem e Manutenção de PCs',30,12,2017),<br>
+        ('19','Redes','Curso de Redes para Iniciantes',40,15,2016),<br>
+        ('20','Segurança','Curso de Segurança',15,8,2018),<br>
+        ('21','SEO','Curso de Otimização de Sites',30,12,2017),<br>
+        ('22','Premiere','Curso de Edição de Vídeos com Premiere',20,10,2017),<br>
+        ('23','After Effects','Curso de Efeitos em Vídeos com After Effects',20,10,2018),<br>
+        ('24','WordPress','Curso de Criação de Sites com WordPress',60,30,2019),<br>
+        ('25','Joomla','Curso de Criação de Sites com Joomla',60,30,2019),<br>
+        ('26','Magento','Curso de Criação de Lojas Virtuais com Magento',50,25,2019),<br>
+        ('27','Modelagem de Dados','Curso de Modelagem de Dados',30,12,2020),<br>
+        ('28','HTML4','Curso Básico de HTML, versão 4.0',20,9,2010),<br>
+        ('29','PHP7','Curso de PHP, versão 7.0',40,20,2020),<br>
+        ('30','PHP4','Curso de PHP, versão 4.0',30,11,2010);<br>
+    </p>
+</details>
+</p>
+
+<h2>Altera apenas um campo de linha</h2>
+<p>
+    update cursos <br>
+    set ano = '2016'<br>
+    where idcurso = '7';
+</p>
+
+<h2>Altera uma linha, mas mais de um campo da tabela limitando apenas uma linha com o LIMIT</h2>
+ <p>
+     update curso <br>
+     set nome = 'PHP', ano = '2015'<br>
+     where idcurso = '4'<br>
+     limit 1;
+ </p>
+ 
+ <h2>Altera varias linhas ao mesmo tempo</h2>
+ <p>
+     update cursos <br>
+     set ano = '2018', carga = '0'<br>
+     where ano = '2050'; -- tambem podendo optar por limitar o número de campos a serem alterados com LIMIT
+ </p>
+ 
+ <h2>Apaga uma linha da tabela</h2>
+ <p>
+     delete from pessoas <br>
+     where ano = '2050'; -- tambem podendo optar por limitar o número de campos a serem apagados com LIMIT
+ </p>
+
+ <h2>Inserindo uma linha na tabela</h2>
+ <p>
+     insert into cursos values <br>
+     ('31','Dança do ventre','Danças Rítmicas','40','30','2018');
+ </p>
+ 
+ <h2>Apaga todas linhas de uma tabela</h2>
+ <p>
+     truncate table cursos;<br>
+     ou <br>
+     truncate cursos;
+ </p>
+ 
+<div class="tema"><h1>GERENCIANDO CÓPIAS DE SEGURANÇA </h1></div>
+<h2>PARA EXPORTAR</h2>
+<p>
+    Clique um SERVER, depois em DATA EXPORT, seleciona o banco de dados que você quer exportar, depois a(s) tabelas;<br>
+    Selecione o tipo de DUMP que você deseja(data ou estrutura);<br>
+    Escolha EXPORT OPTIONS que você queira;<br>
+    Selecione INCLUDE CREATE SCHEMA;<br>
+    Ai é só apertar o START EXPORT.
+</p>
+
+<h2>PARA IMPORTAR</h2>
+<p>
+    Clique um SERVER, depois em DATA IMPORT;<br>
+    Seleciona a pasta em que o banco de dados que você quer importar esteja salva;<br>
+    Ai é só apertar o START EXPORT.
+</p>
+
+<div class="tema"><h1>ORDENANDO UMA TABELA COM SELECT </h1></div>
+<h2>Colocar em ordem alfabética</h2>
+<p>
+    select * from cursos <br>
+    order by nome;
+</p>
+
+<h2>Colocar em ordem decrescente</h2>
+<p>
+    select * from cursos
+    order by nome desc;
+</p>
+
+<h2>Colocar em ordem crescente</h2>
+<p>
+    select * from cursos <hr>
+    order by nome asc;
+</p>
+
+<h2>Ordenar por campos desejados</h2>
+<p>
+    select ano, nome, carga from cursos <br>
+    order by ano, nome;<br><br>
+    
+    ordenar por linha podendo usar: <br>
+    < (menor que);<br>
+    <= (menor ou igual à); <br>
+    > (maior que);<br>
+    >= (maior ou igual à);<br>
+    != (diferente que);<br>
+    <> (diferente que). <br><br>
+    select * from cursos <br>
+    where ano = '2016'<br>
+    order by nome;
+</p>
+
+<h2>Ordenar por linha, mas escolhendo os campos</h2>
+<p>
+    select nome, descriçao, ano from cursos <br>
+    where ano <= '2015' <br>
+    order by ano, nome;
+</p>
+
+<h2>Ordenar entre uma coisa e outra</h2>
+<p>
+    select nome, ano from cursos <br>
+    where ano between 2014 and 2016 <br>
+    order by ano desc, nome asc;
+</p>
+
+<h2>Ordenar por valores especificos</h2>
+<p>
+    select nome, descriçao, ano from cursos <br>
+    where ano in ('2014', '2016') <br>
+    order by ano;
+</p>
+
+<h2>Usando 'AND' para selecionar dados, coletando informações somente se atenderem a todos requisitos do 'AND'</h2>
+<div class="tabela">
+    <div>p  |  q  | p AND q </div>
+    <div>------------------- </div>
+    <div>V  |  V  |    V </div>
+    <div>V  |  F  |    F </div>
+    <div>F  |  V  |    F </div>
+    <div>F  |  F  |    F </div>
+</div>   
+<p>
+    select nome, carga, totaulas from cursos <br>
+    where carga > 35 and totaulas < 30;
+</p>
+
+
+<h2>Usando 'OR' para selecionar dados, coletando informações do primeiro ou seguno requisito do 'OR'</h2>
+<div class="tabela">
+<div>p  |  q  | p OR q </div>
+<div>------------------- </div>
+<div>V  |  V  |    V </div>
+<div>V  |  F  |    V </div>
+<div>F  |  V  |    V </div>
+<div>F  |  F  |    F </div>
+</div>
+<p>
+    select nome, carga, totaulas from cursos <br>
+    where carga > 35 or totaulas < 30;
+</p>
+
+<h2>Usando o operador 'LIKE' e WildCard '%'</h2>
+<p>
+    dependendo da posição da Wildcard '%' procura a letra que deseja tanto no começo como no final ou em ambas partes: <br>
+    depois da letra vai procarar palavras com a primeira letra escolhida, exp.: 'A%' Algoritimo <br>
+    antes da letra vai procurar palavras com a ultima letra escolhida, exp.: '%A' segurançA <br>
+    antes e depois vai procurar palavras que tenham a letra escolhida em qualquer posição da palavra, exp.: '%A%' responsividAde <br><br>
+    select * from cursos <br>
+    where nome like '%a%';<br>
+    select * from cursos where nome like 'ph%p%';
+</p>
+
+<h2>Para pegar palavras que tanha qualquer caracter usando outro tipo de wildcard</h2>
+select * from cursos
+where nome like 'ph%p_';
+
+<h2 style="text-align: center;">Usar o operador 'LIKE' e WildCard '%' para procurar palavras que não tenha a letra desejada <br> podendo usar todos parametros '%' exp.: 'A%', '%A', '%A%'</h2>
+<p>
+    select * from cursos <br>
+    where nome not like 'a%';
+</p>
+
+<h2 style="text-align: center;">FUNÇÃO DE DISTINÇÃO</h2>
+<p>
+    <strong>Procura palavras em uma lista sem repetir palavras com DISTINCT</strong> <br>
+    select distinct nascionalidade from pessoas <br>
+    order by nascionalidade;
+</p>
+
+<h2 style="text-align: center;">FUNÇÃO DE AGREGAÇÃO</h2>
+<p>
+    <strong>Função de agregação, server para contar quantos registros tem um tabela</strong><br>
+    select count(*) from cursos; <br>
+    select count(*) from cursos where carga > 40;<br><br>
+    
+    <strong>Ordenar pelo valor MÁXIMO em uma tabela</strong><br>
+    select nome, max(carga) from cursos order by carga;<br>
+    select nome, max(totaulas) from cursos where ano = '2016';<br><br>
+    
+    <strong>Ordenar pelo valor MÍNIMO em uma tabela</strong><br>
+    select nome, min(carga) from cursos order by carga;<br><br>
+    
+    <strong>Somar varios valores com 'SUM'</strong><br>
+    select sum(totaulas) from cursos where ano = '2016';<br><br>
+    
+    <strong>Saber a media de valores somados com 'AVG'</strong><br>
+    select avg(totaulas) from cursos where ano = '2016';<br>
+</p>
+
+<h2 style="text-align: center;">FUNÇÃO DE AGRUPAMENTO <br>
+agrupando e agregando</h2>
+<p>
+    <strong>Agrupar registro com o 'GROUP BY'</strong><br>
+    select totaulas, count(*) from cursos <br>
+    group by totaulas <br>
+    order by totaulas;<br>
+    ou <br>
+    select carga, totaulas, count(*) from cursos <br>
+    where totaulas = 30 <br>
+    group by carga;<br><br>
+    
+    <strong>Agrupar com parametro</strong><br>
+    select ano, count(*) from cursos <br>
+    group by ano <br>
+    having count(ano) >= 5 <br>
+    order by count(*) desc;<br><br>
+    
+    <strong>Verifica a média</strong><br>
+    select avg(carga) from cursos;<br><br>
+    <strong>Mostra somente um grupo onde estao acima da media selecionada</strong><br>
+    select carga, count(*) from cursos <br>
+    where ano > 2015 <br>
+    group by carga <br>
+    having carga > (select avg(carga) from cursos); <br><br>
+    <strong>Aula 13 do curso em video de SQL, muito importante</strong>
+    <a href="https://www.youtube.com/watch?v=ocyVJ9gRUaE&list=PLHz_AreHm4dkBs-795Dsgvau_ekxg8g1r&index=15" target="_blank" rel="external">Curso em video</a>
+</p>
+
+
+<div class="tema"><h1>CHAVES ESTRANGEIRAS E JOIN </h1></div>
+<p>
+    <h2>Ligando um banco de dados com outro usando chave estrangeira</h2>
+    alter table pessoas <br>
+    add column cursopreferido int;<br>
+
+    <h2> inserindo a chave de ligamento com 'FOREIGN KEY'</h2>
+    alter table pessoas <br>
+    add foreign key(cursopreferido) <br>
+    references cursos(idcurso); <br>
+
+    <h2> ligando-os</h2>
+    update pessoas <br>
+    set cursopreferido = '6'<br>
+    where id = '1';
+
+    <h2> ligando as tabelas com 'INNER JOIN'</h2>
+    select pessoas.nome, cursos.nome, cursos.ano <br>
+    from pessoas inner join cursos <br>
+    on cursos.idcurso = pessoas.cursopreferido;
+
+    <h2> ligando as tabelas com 'OUTER JOIN' dando preferencia a esquerda</h2>
+    select pessoas.nome, cursos.nome, cursos.ano <br>
+    from pessoas left outer join cursos <br>
+    on cursos.idcurso = pessoas.cursopreferido; <br><br>
+    ou <br>
+    <h2> ligando as tabelas com 'OUTER JOIN' dando preferencia a direita</h2>
+    select pessoas.nome, cursos.nome, cursos.ano <br>
+    from pessoas right outer join cursos <br>
+    on cursos.idcurso = pessoas.cursopreferido;
+</p>
+
+<div class="tema"><h1>APELIDANDO TABELAS COM 'AS'</h1></div>
+<p>
+    <h2>Usando 'AS' para 'apelidar' uma tabela</h2>
+    select p.nome, c.nome, c.ano <br>
+    from pessoas as p inner join cursos as c <br>
+    on c.idcurso = p.cursopreferido <br>
+    order by p.nome;
+</p>
+
+<div class="tema"><h1>INNER JOIN COM VÁRIAS TABELAS</h1></div>
+<p>
+create table pessoas_assisti_curso (<br>
+    id int not null auto_increment,<br>
+    data date,<br>
+    idpessoas int,<br>
+    idcurso int,<br>
+    primary key (id),<br>
+    foreign key (idpessoas) references pessoas(id),<br>
+    foreign key (idcurso) references cursos(idcurso) <br>
+) default charset = utf8mb4;<br><br>
+
+select p.nome, c.nome from pessoas p <br>
+join pessoas_assisti_curso a <br>
+on p.id = a.idpessoas <br>
+join cursos c <br>
+on c.idcurso = a.idcurso <br>
+order by p.nome;
+</p>
+<h3 >Para assistir ao curso completo de bancos de dados SQL(MySQL), clique no botão abaixo</h3>
+<div class="container">
+    <div><button><a href="https://www.youtube.com/playlist?list=PLHz_AreHm4dkBs-795Dsgvau_ekxg8g1r" target="_blank" rel="external">Clique Aqui</a></button></div>
+</div>
+<h3>Link para acessar o arquivo <a href="https://www.dropbox.com/scl/fo/k2pt31db6iytsjq3kqy4s/h?rlkey=v1kim9354tr23ugbeqcpfqgoa&dl=0" target="_blank" rel="external">Dump-CeV</a></h3>
+<h4 style="text-align: center;">Para saber mais como acessar o arquivo assista a <a href="https://www.youtube.com/watch?v=GaOlyL3Uv9M" target="_blank" rel="external">aula #11</a> do curso de MySQL-Curso em Video</h4>
+</body>
+</html>
